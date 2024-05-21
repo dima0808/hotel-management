@@ -2,31 +2,31 @@ package com.bookhotel.hotelmanagement.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder
 @Entity
-@Table(name = "rooms")
-public class Room {
+@Table(name = "images")
+public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Integer number;
+    private String name;
 
-    @Column(nullable = false)
-    private Integer size;
+    private String type;
 
-    @Column(nullable = false)
-    private Integer pricePerDay;
+    @Lob
+    private byte[] imageData;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "hotel_id", nullable = false)
     @JsonIgnore
     private Hotel hotel;

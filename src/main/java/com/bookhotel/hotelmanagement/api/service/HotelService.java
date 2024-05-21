@@ -4,7 +4,6 @@ import com.bookhotel.hotelmanagement.api.dto.HotelDto;
 import com.bookhotel.hotelmanagement.api.entity.Hotel;
 
 import java.util.List;
-import java.util.Map;
 
 public interface HotelService {
 
@@ -12,9 +11,12 @@ public interface HotelService {
 
     List<Hotel> findAll();
 
-    Hotel createHotel(HotelDto hotelDto);
+    Hotel create (HotelDto hotelDto);
+
+    Hotel update(Hotel hotel);
+
+    Hotel update(Long id, HotelDto hotelDto);
 
     void deleteById(Long id);
 
-    Map<String, Object> convertHotelToMap(Hotel hotel, String include);
 }

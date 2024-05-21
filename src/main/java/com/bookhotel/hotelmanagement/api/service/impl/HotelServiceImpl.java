@@ -32,7 +32,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public Hotel createHotel(HotelDto hotelDto) {
+    public Hotel create(HotelDto hotelDto) {
 
         Hotel hotel = Hotel.builder()
                 .name(hotelDto.getName())
@@ -40,21 +40,27 @@ public class HotelServiceImpl implements HotelService {
                 .address(hotelDto.getAddress())
                 .build();
 
-        List<Room> rooms = new ArrayList<>();
-        for (RoomDto roomDto : hotelDto.getRooms()) {
-            Room room = Room.builder()
-                    .number(roomDto.getNumber())
-                    .size(roomDto.getSize())
-                    .isOccupied(roomDto.getIsOccupied())
-                    .settlementDate(roomDto.getSettlementDate())
-                    .evictionDate(roomDto.getEvictionDate())
-                    .hotel(hotel).build();
-            rooms.add(room);
-        }
-
-        hotel.setRooms(rooms);
+        hotel.setRooms(roomsConverting(hotelDto.getRooms(), hotel));
 
         return hotelRepository.save(hotel);
+    }
+
+    @Override
+    public Hotel update(Hotel hotel) {
+        return hotelRepository.save(hotel);
+    }
+
+    @Override
+    public Hotel update(Long id, HotelDto hotelDto) {
+
+        Hotel existingHotel = findById(id);
+
+        if (hotelDto.getName() != null) existingHotel.setName(hotelDto.getName());
+        if (hotelDto.getDescription() != null) existingHotel.setDescription(hotelDto.getDescription());
+        if (hotelDto.getAddress() != null) existingHotel.setAddress(hotelDto.getAddress());
+        if (hotelDto.getRooms() != null) existingHotel.setRooms(roomsConverting(hotelDto.getRooms(), existingHotel));
+
+        return hotelRepository.save(existingHotel);
     }
 
     @Override
@@ -62,20 +68,19 @@ public class HotelServiceImpl implements HotelService {
         hotelRepository.deleteById(id);
     }
 
-    @Override
-    public Map<String, Object> convertHotelToMap(Hotel hotel, String include) {
 
-        Map<String, Object> hotelMap = new HashMap<>();
+    private List<Room> roomsConverting(List<RoomDto> roomsDto, Hotel hotel) {
 
-        hotelMap.put("address", hotel.getAddress());
-        hotelMap.put("description", hotel.getDescription());
-        hotelMap.put("name", hotel.getName());
-        hotelMap.put("id", hotel.getId());
-
-        if (include == null) return hotelMap;
-
-        List<String> includeParameters = new ArrayList<>(Arrays.asList(include.split(",")));
-        if (includeParameters.contains("rooms")) hotelMap.put("rooms", hotel.getRooms());
-        return hotelMap;
+        List<Room> rooms = new ArrayList<>();
+        for (RoomDto roomDto : roomsDto) {
+            Room room = Room.builder()
+                    .number(roomDto.getNumber())
+                    .size(roomDto.getSize())
+                    .pricePerDay(roomDto.getPricePerDay())
+                    .hotel(hotel)
+                    .build();
+            rooms.add(room);
+        }
+        return rooms;
     }
 }

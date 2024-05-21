@@ -1,11 +1,10 @@
 package com.bookhotel.hotelmanagement.api.dto;
 
+import com.bookhotel.hotelmanagement.api.entity.Hotel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,9 +16,7 @@ public class RoomDto {
 
     private Integer size;
 
-    private Boolean isOccupied;
+    private Integer pricePerDay;
 
-    private LocalDate settlementDate;
-
-    private LocalDate evictionDate;
+    private Hotel hotel;
 }

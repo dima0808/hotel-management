@@ -8,6 +8,7 @@ import com.bookhotel.hotelmanagement.api.service.HotelService;
 import com.bookhotel.hotelmanagement.api.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
@@ -25,11 +26,13 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public List<Room> findAll(Long hotelId) {
         return roomRepository.findByHotelId(hotelId);
     }
 
     @Override
+    @Transactional
     public Room findByNumber(Long hotelId, Integer number) {
 
         Hotel hotel = hotelService.findById(hotelId);
@@ -54,6 +57,13 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
+    public Room update(Room room) {
+        return roomRepository.save(room);
+    }
+
+    @Override
+    @Transactional
     public Room update(Long hotelId, Integer number, RoomDto roomDto) {
 
         Room existingRoom = findByNumber(hotelId, number);
@@ -65,6 +75,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public void deleteByNumber(Long hotelId, Integer number) {
         Hotel hotel = hotelService.findById(hotelId);
 

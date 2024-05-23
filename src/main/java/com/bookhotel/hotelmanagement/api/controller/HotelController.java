@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/hotels")
+@RequestMapping("/api/hotels")
 public class HotelController {
 
     private final HotelService hotelService;
@@ -130,6 +130,45 @@ public class HotelController {
     @DeleteMapping("/{hotelId}/rooms/{number}")
     private ResponseEntity<Void> deleteHotelRoom(@PathVariable Long hotelId, @PathVariable Integer number) {
         roomService.deleteByNumber(hotelId, number);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    /*
+    ROOM IMAGES
+     */
+
+    @GetMapping("/{hotelId}/rooms/{number}/image")
+    public ResponseEntity<?> getRoomImage(@PathVariable Long hotelId, @PathVariable Integer number) {
+        Image image = storageService.findImage(hotelId, number);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf(image.getType()))
+                .body(storageService.downloadImage(image));
+    }
+
+    @PostMapping("/{hotelId}/rooms/{number}/image")
+    private ResponseEntity<?> uploadRoomImage(@PathVariable Long hotelId,
+                                              @PathVariable Integer number,
+                                               @RequestParam MultipartFile file) throws IOException {
+        Image image = storageService.uploadImage(hotelId, number, file);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .contentType(MediaType.valueOf(image.getType()))
+                .body(storageService.downloadImage(image));
+    }
+
+    @PutMapping("/{hotelId}/rooms/{number}/image")
+    private ResponseEntity<?> updateRoomImage(@PathVariable Long hotelId,
+                                              @PathVariable Integer number,
+                                               @RequestParam MultipartFile file) throws IOException {
+        Image image = storageService.updateImage(hotelId, number, file);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .contentType(MediaType.valueOf(image.getType()))
+                .body(storageService.downloadImage(image));
+    }
+
+    @DeleteMapping("/{hotelId}/rooms/{number}/image")
+    private ResponseEntity<Void> deleteRoomImage(@PathVariable Long hotelId, @PathVariable Integer number) {
+        storageService.deleteImage(hotelId, number);
         return ResponseEntity.noContent().build();
     }
 }

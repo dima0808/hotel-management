@@ -26,8 +26,12 @@ public class Room {
     @Column(nullable = false)
     private Integer pricePerDay;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", nullable = false)
     @JsonIgnore
     private Hotel hotel;
+
+    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Image image;
 }

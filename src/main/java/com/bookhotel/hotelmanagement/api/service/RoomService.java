@@ -13,6 +13,8 @@ public interface RoomService {
 
     Room create(Long hotelId, RoomDto roomDto);
 
+    Room update(Room room);
+
     Room update(Long hotelId, Integer number, RoomDto roomDto);
 
     void deleteByNumber(Long hotelId, Integer number);

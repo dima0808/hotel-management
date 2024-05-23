@@ -12,4 +12,6 @@ public interface AuthService {
     User signUp(SignUpDto signUpDto);
 
     void logout();
+
+    User findByUsername(String username);
 }

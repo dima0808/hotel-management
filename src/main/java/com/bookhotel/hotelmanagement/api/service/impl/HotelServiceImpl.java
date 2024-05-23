@@ -7,6 +7,7 @@ import com.bookhotel.hotelmanagement.api.entity.Room;
 import com.bookhotel.hotelmanagement.api.repository.HotelRepository;
 import com.bookhotel.hotelmanagement.api.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -54,6 +55,10 @@ public class HotelServiceImpl implements HotelService {
     public Hotel update(Long id, HotelDto hotelDto) {
 
         Hotel existingHotel = findById(id);
+
+        if (!hotelDto.getOwner().equals(existingHotel.getOwner().getUsername())) {
+            return null;
+        }
 
         if (hotelDto.getName() != null) existingHotel.setName(hotelDto.getName());
         if (hotelDto.getDescription() != null) existingHotel.setDescription(hotelDto.getDescription());

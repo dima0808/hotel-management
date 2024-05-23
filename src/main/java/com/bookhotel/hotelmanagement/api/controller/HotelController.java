@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +41,7 @@ public class HotelController {
 
     @GetMapping
     public ResponseEntity<List<Hotel>> getAllHotels() {
+        System.out.println();
         return ResponseEntity.ok(hotelService.findAll());
     }
 
@@ -48,16 +50,19 @@ public class HotelController {
         return ResponseEntity.ok(hotelService.findById(hotelId));
     }
 
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PostMapping
     public ResponseEntity<Hotel> createHotel(@RequestBody HotelDto hotelDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(hotelService.create(hotelDto));
     }
 
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PatchMapping("/{hotelId}")
     private ResponseEntity<Hotel> updateHotel(@PathVariable Long hotelId, @RequestBody HotelDto hotelDto) {
         return ResponseEntity.ok(hotelService.update(hotelId, hotelDto));
     }
 
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @DeleteMapping("/{hotelId}")
     public ResponseEntity<Void> deleteHotel(@PathVariable Long hotelId) {
         hotelService.deleteById(hotelId);
@@ -77,6 +82,7 @@ public class HotelController {
                 .body(storageService.downloadImage(image));
     }
 
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PostMapping("/{hotelId}/image")
     private ResponseEntity<?> uploadHotelImage(@PathVariable Long hotelId,
                                                @RequestParam MultipartFile file) throws IOException {
@@ -86,6 +92,7 @@ public class HotelController {
                 .body(storageService.downloadImage(image));
     }
 
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PutMapping("/{hotelId}/image")
     private ResponseEntity<?> updateHotelImage(@PathVariable Long hotelId,
                                                @RequestParam MultipartFile file) throws IOException {
@@ -95,6 +102,7 @@ public class HotelController {
                 .body(storageService.downloadImage(image));
     }
 
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @DeleteMapping("/{hotelId}/image")
     private ResponseEntity<Void> deleteHotelImage(@PathVariable Long hotelId) {
         storageService.deleteImage(hotelId);
@@ -116,17 +124,20 @@ public class HotelController {
         return ResponseEntity.ok(roomService.findByNumber(hotelId, number));
     }
 
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PostMapping("/{hotelId}/rooms")
     private ResponseEntity<Room> createHotelRoom(@PathVariable Long hotelId, @RequestBody RoomDto roomDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(roomService.create(hotelId, roomDto));
     }
 
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PatchMapping("/{hotelId}/rooms/{number}")
     private ResponseEntity<Room> updateHotelRoom(@PathVariable Long hotelId, @PathVariable Integer number,
                                                  @RequestBody RoomDto roomDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(roomService.update(hotelId, number, roomDto));
     }
 
+    @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @DeleteMapping("/{hotelId}/rooms/{number}")
     private ResponseEntity<Void> deleteHotelRoom(@PathVariable Long hotelId, @PathVariable Integer number) {
         roomService.deleteByNumber(hotelId, number);

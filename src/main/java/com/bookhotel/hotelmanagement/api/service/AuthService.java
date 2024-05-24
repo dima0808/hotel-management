@@ -7,7 +7,7 @@ import com.bookhotel.hotelmanagement.api.entity.User;
 
 public interface AuthService {
 
-    User signIn(SignInDto signInDto);
+    String signIn(SignInDto signInDto);
 
     User signUp(SignUpDto signUpDto);
 

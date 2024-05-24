@@ -9,6 +9,7 @@ import com.bookhotel.hotelmanagement.api.service.RoomService;
 import com.bookhotel.hotelmanagement.api.service.StorageService;
 import com.bookhotel.hotelmanagement.api.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,11 +48,16 @@ public class StorageServiceImpl implements StorageService {
     @Transactional
     public Image uploadImage(Long hotelId, MultipartFile file) throws IOException {
 
+        Hotel hotel = hotelService.findById(hotelId);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!hotel.getOwner().getUsername().equals(username)) return null; // Forbidden
+
         Image image = Image.builder()
                 .name(file.getOriginalFilename())
                 .type(file.getContentType())
                 .imageData(ImageUtils.compressImage(file.getBytes()))
-                .hotel(hotelService.findById(hotelId)).build();
+                .hotel(hotel).build();
 
         return storageRepository.save(image);
     }
@@ -59,6 +65,11 @@ public class StorageServiceImpl implements StorageService {
     @Override
     @Transactional
     public Image uploadImage(Long hotelId, Integer number, MultipartFile file) throws IOException {
+
+        Hotel hotel = hotelService.findById(hotelId);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!hotel.getOwner().getUsername().equals(username)) return null; // Forbidden
 
         Image image = Image.builder()
                 .name(file.getOriginalFilename())
@@ -75,6 +86,9 @@ public class StorageServiceImpl implements StorageService {
 
         Hotel hotel = hotelService.findById(hotelId);
 
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!hotel.getOwner().getUsername().equals(username)) return null; // Forbidden
+
         Image existingImage = hotel.getImage();
 
         existingImage.setName(file.getName());
@@ -87,6 +101,11 @@ public class StorageServiceImpl implements StorageService {
     @Override
     @Transactional
     public Image updateImage(Long hotelId, Integer number, MultipartFile file) throws IOException {
+
+        Hotel hotel = hotelService.findById(hotelId);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!hotel.getOwner().getUsername().equals(username)) return null; // Forbidden
 
         Room room = roomService.findByNumber(hotelId, number);
 
@@ -104,6 +123,10 @@ public class StorageServiceImpl implements StorageService {
     public void deleteImage(Long hotelId) {
 
         Hotel hotel = hotelService.findById(hotelId);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!hotel.getOwner().getUsername().equals(username)) return; // Forbidden
+
         Image image = hotel.getImage();
 
         hotel.setImage(null);
@@ -114,6 +137,11 @@ public class StorageServiceImpl implements StorageService {
     @Override
     @Transactional
     public void deleteImage(Long hotelId, Integer number) {
+
+        Hotel hotel = hotelService.findById(hotelId);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!hotel.getOwner().getUsername().equals(username)) return; // Forbidden
 
         Room room = roomService.findByNumber(hotelId, number);
         Image image = room.getImage();

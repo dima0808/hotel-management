@@ -16,7 +16,5 @@ public class HotelDto {
 
     private String address;
 
-    private String owner;
-
     private List<RoomDto> rooms;
 }

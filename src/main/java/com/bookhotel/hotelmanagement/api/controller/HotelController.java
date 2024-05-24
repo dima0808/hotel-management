@@ -58,7 +58,7 @@ public class HotelController {
 
     @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PatchMapping("/{hotelId}")
-    private ResponseEntity<Hotel> updateHotel(@PathVariable Long hotelId, @RequestBody HotelDto hotelDto) {
+    public ResponseEntity<Hotel> updateHotel(@PathVariable Long hotelId, @RequestBody HotelDto hotelDto) {
         return ResponseEntity.ok(hotelService.update(hotelId, hotelDto));
     }
 
@@ -84,7 +84,7 @@ public class HotelController {
 
     @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PostMapping("/{hotelId}/image")
-    private ResponseEntity<?> uploadHotelImage(@PathVariable Long hotelId,
+    public ResponseEntity<?> uploadHotelImage(@PathVariable Long hotelId,
                                                @RequestParam MultipartFile file) throws IOException {
         Image image = storageService.uploadImage(hotelId, file);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -94,7 +94,7 @@ public class HotelController {
 
     @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PutMapping("/{hotelId}/image")
-    private ResponseEntity<?> updateHotelImage(@PathVariable Long hotelId,
+    public ResponseEntity<?> updateHotelImage(@PathVariable Long hotelId,
                                                @RequestParam MultipartFile file) throws IOException {
         Image image = storageService.updateImage(hotelId, file);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -104,7 +104,7 @@ public class HotelController {
 
     @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @DeleteMapping("/{hotelId}/image")
-    private ResponseEntity<Void> deleteHotelImage(@PathVariable Long hotelId) {
+    public ResponseEntity<Void> deleteHotelImage(@PathVariable Long hotelId) {
         storageService.deleteImage(hotelId);
         return ResponseEntity.noContent().build();
     }
@@ -126,20 +126,20 @@ public class HotelController {
 
     @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PostMapping("/{hotelId}/rooms")
-    private ResponseEntity<Room> createHotelRoom(@PathVariable Long hotelId, @RequestBody RoomDto roomDto) {
+    public ResponseEntity<Room> createHotelRoom(@PathVariable Long hotelId, @RequestBody RoomDto roomDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(roomService.create(hotelId, roomDto));
     }
 
     @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @PatchMapping("/{hotelId}/rooms/{number}")
-    private ResponseEntity<Room> updateHotelRoom(@PathVariable Long hotelId, @PathVariable Integer number,
+    public ResponseEntity<Room> updateHotelRoom(@PathVariable Long hotelId, @PathVariable Integer number,
                                                  @RequestBody RoomDto roomDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(roomService.update(hotelId, number, roomDto));
     }
 
     @PreAuthorize("hasRole('ROLE_HOTEL_ADMIN')")
     @DeleteMapping("/{hotelId}/rooms/{number}")
-    private ResponseEntity<Void> deleteHotelRoom(@PathVariable Long hotelId, @PathVariable Integer number) {
+    public ResponseEntity<Void> deleteHotelRoom(@PathVariable Long hotelId, @PathVariable Integer number) {
         roomService.deleteByNumber(hotelId, number);
         return ResponseEntity.noContent().build();
     }
@@ -158,7 +158,7 @@ public class HotelController {
     }
 
     @PostMapping("/{hotelId}/rooms/{number}/image")
-    private ResponseEntity<?> uploadRoomImage(@PathVariable Long hotelId,
+    public ResponseEntity<?> uploadRoomImage(@PathVariable Long hotelId,
                                               @PathVariable Integer number,
                                                @RequestParam MultipartFile file) throws IOException {
         Image image = storageService.uploadImage(hotelId, number, file);
@@ -168,7 +168,7 @@ public class HotelController {
     }
 
     @PutMapping("/{hotelId}/rooms/{number}/image")
-    private ResponseEntity<?> updateRoomImage(@PathVariable Long hotelId,
+    public ResponseEntity<?> updateRoomImage(@PathVariable Long hotelId,
                                               @PathVariable Integer number,
                                                @RequestParam MultipartFile file) throws IOException {
         Image image = storageService.updateImage(hotelId, number, file);
@@ -178,7 +178,7 @@ public class HotelController {
     }
 
     @DeleteMapping("/{hotelId}/rooms/{number}/image")
-    private ResponseEntity<Void> deleteRoomImage(@PathVariable Long hotelId, @PathVariable Integer number) {
+    public ResponseEntity<Void> deleteRoomImage(@PathVariable Long hotelId, @PathVariable Integer number) {
         storageService.deleteImage(hotelId, number);
         return ResponseEntity.noContent().build();
     }

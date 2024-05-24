@@ -1,5 +1,6 @@
 package com.bookhotel.hotelmanagement.api.controller;
 
+import com.bookhotel.hotelmanagement.api.dto.JwtResponse;
 import com.bookhotel.hotelmanagement.api.dto.SignInDto;
 import com.bookhotel.hotelmanagement.api.dto.SignUpDto;
 import com.bookhotel.hotelmanagement.api.entity.User;
@@ -22,8 +23,9 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<User> signIn(@RequestBody SignInDto signInDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(authService.signIn(signInDto));
+    public ResponseEntity<?> signIn(@RequestBody SignInDto signInDto) {
+        String jwt = authService.signIn(signInDto);
+        return ResponseEntity.ok(new JwtResponse(jwt));
     }
 
     @PostMapping("/signup")
@@ -37,6 +39,8 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(authService.findByUsername(username));
     }
 
+
+    // Deprecated. Remove JWT token instead
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
         authService.logout();

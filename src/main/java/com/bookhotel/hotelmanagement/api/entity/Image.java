@@ -27,7 +27,12 @@ public class Image {
     private byte[] imageData;
 
     @OneToOne
-    @JoinColumn(name = "hotel_id", nullable = false)
+    @JoinColumn(name = "hotel_id")
     @JsonIgnore
     private Hotel hotel;
+
+    @OneToOne
+    @JoinColumn(name = "room_id")
+    @JsonIgnore
+    private Room room;
 }

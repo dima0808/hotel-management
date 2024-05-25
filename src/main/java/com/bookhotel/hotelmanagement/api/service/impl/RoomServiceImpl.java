@@ -7,7 +7,9 @@ import com.bookhotel.hotelmanagement.api.repository.RoomRepository;
 import com.bookhotel.hotelmanagement.api.service.HotelService;
 import com.bookhotel.hotelmanagement.api.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
@@ -25,11 +27,13 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public List<Room> findAll(Long hotelId) {
         return roomRepository.findByHotelId(hotelId);
     }
 
     @Override
+    @Transactional
     public Room findByNumber(Long hotelId, Integer number) {
 
         Hotel hotel = hotelService.findById(hotelId);
@@ -43,18 +47,35 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room create(Long hotelId, RoomDto roomDto) {
 
+        Hotel hotel = hotelService.findById(hotelId);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!hotel.getOwner().getUsername().equals(username)) return null; // Forbidden
+
         Room room = Room.builder()
                 .number(roomDto.getNumber())
                 .size(roomDto.getSize())
                 .pricePerDay(roomDto.getPricePerDay())
-                .hotel(hotelService.findById(hotelId))
+                .hotel(hotel)
                 .build();
 
         return roomRepository.save(room);
     }
 
     @Override
+    @Transactional
+    public Room update(Room room) {
+        return roomRepository.save(room);
+    }
+
+    @Override
+    @Transactional
     public Room update(Long hotelId, Integer number, RoomDto roomDto) {
+
+        Hotel hotel = hotelService.findById(hotelId);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!hotel.getOwner().getUsername().equals(username)) return null; // Forbidden
 
         Room existingRoom = findByNumber(hotelId, number);
 
@@ -65,8 +86,13 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public void deleteByNumber(Long hotelId, Integer number) {
+
         Hotel hotel = hotelService.findById(hotelId);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!hotel.getOwner().getUsername().equals(username)) return; // Forbidden
 
         List<Room> rooms = hotel.getRooms();
         Iterator<Room> iterator = rooms.iterator();

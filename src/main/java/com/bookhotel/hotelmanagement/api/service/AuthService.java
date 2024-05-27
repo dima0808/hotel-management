@@ -1,8 +1,8 @@
 package com.bookhotel.hotelmanagement.api.service;
 
-
 import com.bookhotel.hotelmanagement.api.dto.SignInDto;
 import com.bookhotel.hotelmanagement.api.dto.SignUpDto;
+import com.bookhotel.hotelmanagement.api.dto.UserDto;
 import com.bookhotel.hotelmanagement.api.entity.User;
 
 public interface AuthService {
@@ -14,4 +14,6 @@ public interface AuthService {
     void logout();
 
     User findByUsername(String username);
+
+    User update(String username, UserDto userDto);
 }

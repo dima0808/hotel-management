@@ -79,10 +79,14 @@ public class RoomServiceImpl implements RoomService {
 
         Room existingRoom = findByNumber(hotelId, number);
 
-        if (roomDto.getSize() != null)existingRoom.setSize(roomDto.getSize());
-        if (roomDto.getPricePerDay() != null)existingRoom.setPricePerDay(roomDto.getPricePerDay());
-
-        return roomRepository.save(existingRoom);
+        if (existingRoom == null) {
+            roomDto.setNumber(number);
+            return create(hotelId, roomDto);
+        } else {
+            if (roomDto.getSize() != null)existingRoom.setSize(roomDto.getSize());
+            if (roomDto.getPricePerDay() != null)existingRoom.setPricePerDay(roomDto.getPricePerDay());
+            return roomRepository.save(existingRoom);
+        }
     }
 
     @Override

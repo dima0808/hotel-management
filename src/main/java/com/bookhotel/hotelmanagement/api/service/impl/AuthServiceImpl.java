@@ -2,6 +2,7 @@ package com.bookhotel.hotelmanagement.api.service.impl;
 
 import com.bookhotel.hotelmanagement.api.dto.SignInDto;
 import com.bookhotel.hotelmanagement.api.dto.SignUpDto;
+import com.bookhotel.hotelmanagement.api.dto.UserDto;
 import com.bookhotel.hotelmanagement.api.entity.Role;
 import com.bookhotel.hotelmanagement.api.entity.User;
 import com.bookhotel.hotelmanagement.api.repository.RoleRepository;
@@ -94,5 +95,22 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
+    }
+
+    @Override
+    public User update(String username, UserDto userDto) {
+        User existingUser = findByUsername(username);
+
+        if (userRepository.existsByEmail(userDto.getEmail()) && !userDto.getEmail().equals(existingUser.getEmail())) {
+            throw new UserAlreadyExistException("email", userDto.getEmail());
+        }
+
+        if (userDto.getEmail() != null) existingUser.setEmail(userDto.getEmail());
+        if (userDto.getPassword() != null) existingUser.setPassword(userDto.getPassword());
+        if (userDto.getFirstName() != null) existingUser.setFirstName(userDto.getFirstName());
+        if (userDto.getSecondName() != null) existingUser.setSecondName(userDto.getSecondName());
+        if (userDto.getPhoneNumber() != null) existingUser.setPhoneNumber(userDto.getPhoneNumber());
+
+        return userRepository.save(existingUser);
     }
 }

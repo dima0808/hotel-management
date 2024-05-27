@@ -111,11 +111,14 @@ public class StorageServiceImpl implements StorageService {
 
         Image existingImage = room.getImage();
 
-        existingImage.setName(file.getName());
-        existingImage.setType(file.getContentType());
-        existingImage.setImageData(ImageUtils.compressImage(file.getBytes()));
-
-        return storageRepository.save(existingImage);
+        if (existingImage == null) {
+            return uploadImage(hotelId, number, file);
+        } else {
+            existingImage.setName(file.getName());
+            existingImage.setType(file.getContentType());
+            existingImage.setImageData(ImageUtils.compressImage(file.getBytes()));
+            return storageRepository.save(existingImage);
+        }
     }
 
     @Override

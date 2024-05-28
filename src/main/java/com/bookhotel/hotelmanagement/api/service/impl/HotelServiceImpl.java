@@ -37,6 +37,15 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    public List<Hotel> findAllAdmin() {
+
+        User owner = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElse(null);
+
+        return hotelRepository.findByOwner(owner);
+    }
+
+    @Override
     public Hotel create(HotelDto hotelDto) {
 
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())

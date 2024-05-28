@@ -11,6 +11,8 @@ public interface HotelService {
 
     List<Hotel> findAll();
 
+    List<Hotel> findAllAdmin();
+
     Hotel create (HotelDto hotelDto);
 
     Hotel update(Hotel hotel);
@@ -18,5 +20,4 @@ public interface HotelService {
     Hotel update(Long id, HotelDto hotelDto);
 
     void deleteById(Long id);
-
 }

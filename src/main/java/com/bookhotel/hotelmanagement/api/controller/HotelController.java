@@ -158,8 +158,7 @@ public class HotelController {
     }
 
     @PostMapping("/{hotelId}/rooms/{number}/image")
-    public ResponseEntity<?> uploadRoomImage(@PathVariable Long hotelId,
-                                              @PathVariable Integer number,
+    public ResponseEntity<?> uploadRoomImage(@PathVariable Long hotelId, @PathVariable Integer number,
                                                @RequestParam MultipartFile file) throws IOException {
         Image image = storageService.uploadImage(hotelId, number, file);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -168,8 +167,7 @@ public class HotelController {
     }
 
     @PutMapping("/{hotelId}/rooms/{number}/image")
-    public ResponseEntity<?> updateRoomImage(@PathVariable Long hotelId,
-                                              @PathVariable Integer number,
+    public ResponseEntity<?> updateRoomImage(@PathVariable Long hotelId, @PathVariable Integer number,
                                                @RequestParam MultipartFile file) throws IOException {
         Image image = storageService.updateImage(hotelId, number, file);
         return ResponseEntity.status(HttpStatus.CREATED)
